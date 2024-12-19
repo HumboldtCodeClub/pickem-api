@@ -20,6 +20,7 @@ public func configure(_ app: Application) async throws {
 
     app.migrations.add(CreateTodo())
     app.migrations.add(CreateUser())
+    app.migrations.add(CreateTeam())
     // register routes
     try routes(app)
 }
