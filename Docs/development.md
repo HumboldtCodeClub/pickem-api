@@ -24,3 +24,9 @@ git checkout prime
 git merge --squash feature/<branch_name>
 git commit -m "Feature: [Description]"
 ```
+
+## Manage images
+```bash
+docker images
+docker image prune -f
+```

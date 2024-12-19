@@ -19,6 +19,7 @@ public func configure(_ app: Application) async throws {
     ), as: .mysql)
 
     app.migrations.add(CreateTodo())
+    app.migrations.add(CreateUser())
     // register routes
     try routes(app)
 }
