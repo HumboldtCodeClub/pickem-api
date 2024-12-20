@@ -45,23 +45,29 @@ struct UserController: RouteCollection {
   /// - Throws: A `badRequest` error if validation fails or a user with the same username exists.
   @Sendable
   func createUser(req: Request) async throws -> User.Public {
+    // Validate the incoming request content against User.DTO validation rules
     do {
       try User.DTO.validate(content: req)
     } catch {
+      // If validation fails, return a 400 Bad Request response
       throw Abort(.badRequest)
     }
-
+    // Decode the validated request content into a User.DTO object
     let dto = try req.content.decode(User.DTO.self)
-
+    // Check if a user with the same username already exists (including deleted users)
     if let _ = try await User.query(on: req.db).withDeleted().filter(\.$username == dto.username).first() {
+      // If a matching user is found, return a 400 Bad Request response
       throw Abort(.badRequest)
     }
-
+    // Create a new User object using the username from the DTO
     let user = User(username: dto.username)
     do {
+      // Save the new user to the database
       try await user.create(on: req.db)
+      // Convert the user to its public representation and return it
       return user.convertToPublic()
     } catch {
+      // If an error occurs during user creation, return a 500 Internal Server Error response
       throw Abort(.internalServerError)
     }
   }
