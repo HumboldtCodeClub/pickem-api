@@ -1,0 +1,186 @@
+openapi: '3.0.3'
+info:
+  title: Pickem API
+  description: A backend api for a simple sports pickem game.
+  contact:
+    name: Sean Allen
+    email: sean.allen@humboldtcode.club
+  version: '0.1'
+servers:
+  - url: http://localhost:8080
+    description: Development server
+tags:
+  - name: users
+    description: user endpoints
+  - name: teams
+    description: team endpoints
+  - name: games
+    description: game endpoints
+  - name: picks
+    description: pickem pick endpoints
+  - name: knockout
+    description: knockout pick endpoints
+paths:
+  /users:
+    get:
+      deprecated: false
+      tags:
+        - users
+      summary: Retrieve All Users
+      description: Returns all users.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+        - users
+      summary: Create a new users.
+      description: Something about this endpoints
+      operationId: createUser
+      requestBody:
+        $ref: '#/components/requestBodies/createUser'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+  /users/{userID}:
+    get:
+      tags:
+        - users
+      summary: Retrieve a User
+      description: Returns a user with the provided userId
+      operationId: findUser
+      parameters:
+        - name: userId
+          in: path
+          description: id of the user to find
+          required: true
+          schema: 
+            type: integer
+          example: /users/17
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not Found
+    patch:
+      tags:
+        - users
+      summary: Update a User
+      description: Update a user with the given userId
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          description: id of the user to update
+          required: true
+          schema: 
+            type: integer
+          example: /users/10
+      requestBody:
+        $ref: '#/components/requestBodies/updateUser'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - users
+      summary: Delete a User
+      description: Delete user with given userId. Soft Delete
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          description: id of user to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  reason: 
+                    type: string
+                example:
+                  error: true
+                  reason: Not Found
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        admin:
+          type: boolean
+      example:
+        id: 17
+        username: Gallonallen
+        admin: true
+    Team:
+      type: object
+      properties:
+        id:
+          type: integer
+        city:
+          type: string
+        name:
+          type: string
+        abbr:
+          type: string
+    Game:
+      type: object
+    Pickem Pick:
+      type: object
+    Knockout Pick:
+      type: object
+  requestBodies:
+    createUser:
+      description: user to createUser
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+            required:
+              - username
+            example:
+              username: Gallonallen
+    updateUser:
+      description: User updates 
+      content:
+        application/json:
+          schema: 
+            type: object
+            properties:
+              username:
+                type: string
+
