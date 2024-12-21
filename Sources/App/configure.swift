@@ -22,6 +22,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateUser())
     app.migrations.add(CreateTeam())
     app.migrations.add(CreateGame())
+    app.migrations.add(CreatePickem())
     // register routes
     try routes(app)
 }

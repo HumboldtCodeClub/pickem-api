@@ -43,8 +43,10 @@ struct TeamController: RouteCollection {
     do {
       try await team.create(on: req.db)
       return team.convertToPublic()
+    } catch let sqlError as DatabaseError {
+      throw Abort(.badRequest, reason: "Database error:")
     } catch {
-      throw Abort(.internalServerError)
+      throw Abort(.internalServerError, reason: "An unexpected error occurred.")
     }
   }
 }
